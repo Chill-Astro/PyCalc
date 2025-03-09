@@ -7,6 +7,6 @@ It's not revolutionary, but it's helpful! Considering you don't need prompting a
 
 And what's more? It's very lightweight! 7.7 MB for a Calculator!
 
-![image](https://github.com/user-attachments/assets/a7e276b5-645f-4484-806a-70f905fc02b5)
+![image](https://github.com/user-attachments/assets/64817535-fbf5-414d-b5f4-ebb8b8d3fadc)
 
 Want to add more Calculation Options? Let's see what comes next!
