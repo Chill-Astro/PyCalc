@@ -9,7 +9,7 @@ Features Include :
 - Fast and Error-Proof Calculations. ✅
 - High Precision for decimals. ✅
 
-Installation Guide :
+Installation and Requirements :
 
 - Any system with Python installed.
 - Requires Requests package to be installed via pip for PyCalc v1.2 and Higher!
