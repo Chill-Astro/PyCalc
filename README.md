@@ -1,12 +1,21 @@
 PyCalc : A Simple and Lightweight Calculator. Made in Python!
 
-Heron's Formula, Compound Interest, etc., many things we learn, but overtime it becomes boring.
-Asking ChatGPT? Or using an online solver? Well, why not do it offline?
-Presenting PyCalc! Made by only 1 person, with all of us in mind! 
-It's not revolutionary, but it's helpful! Considering you don't need prompting anymore!
+PyCalc is a terminal-based Calculator. But what makes it different is it's shear amount of calculation options and extensibility!
 
-And what's more? It's very lightweight! 7.7 MB for a Calculator!
+Features Include :
+
+- Dozens of Calculation Options ✅
+- Extemely Lightweight. ✅
+- Update Checking Support ✅
+- Highly Powerful and extendible. ✅
+- Fast and Error-Proof Calculations. ✅
+- High Precision for decimals. ✅
+
+Requirements :
+
+- Any system with Python installed [if using PyCalc.py].
+- No installtion needed for Windows systems if using PyCalc.exe
 
 ![image](https://github.com/user-attachments/assets/64817535-fbf5-414d-b5f4-ebb8b8d3fadc)
 
-Want to add more Calculation Options? Let's see what comes next!
+Simple! Powerful! Lightweight!
