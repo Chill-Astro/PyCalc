@@ -1,11 +1,12 @@
+#!/usr/bin/env python3
 import math as mt
 import requests
 UPDATE_VERSION_URL = "https://gist.githubusercontent.com/Chill-Astro/e8c32d9a2b30780e3b6fd2819a51b330/raw/PyC_V.txt"
-CURRENT_VERSION = "1.4"
+CURRENT_VERSION = "1.5" # Linux Release + Installer & Winget Support
 def check_for_updates() : # Entire Update Check Thingy
     try:
         response = requests.get(UPDATE_VERSION_URL, timeout=5) # Fetch version file, timeout after 5 seconds
-        response.raise_for_status()   # Raise HTTPError for bad responses
+        response.raise_for_status() # Raise HTTPError for bad responses
         latest_version = response.text.strip() # Get version string from file and remove whitespace
         if latest_version > CURRENT_VERSION:
             print("--- UPDATE AVAILABLE! ---\n"
@@ -39,12 +40,12 @@ def perform_binary_operation(operator, operation_func):
 print("PyCalc : A Simple and Lightweight Calculator. Made in Python!\n" # Pycalc Starts here!
       f"Version : {CURRENT_VERSION}\n") # Print Version
 check_for_updates() # Perform update check at startup
-print("\nSelect a Mathematical Operation : \n"
-      "1. Addition\n" "2. Subtraction\n" "3. Multiplication\n" "4. Division\n" "5. Exponents (x^y)\n" "6. Square Root\n"
+print("Select a Mathematical Operation : \n"
+      "\n1. Addition\n" "2. Subtraction\n" "3. Multiplication\n" "4. Division\n" "5. Exponents (x^y)\n" "6. Square Root\n"
       "7. Cube Root\n" "8. Approximate / Rounding\n" "9. Heron's Formula\n" "10. Simple Interest\n" "11. Compound Interest\n" "12. Prime No. Check\n"
       "13. Triangle Check\n" "14. Right Triangle Check\n" "15. Perimiter [Various Shapes]\n" "16. Area [Varoius Shapes]\n"
       "17. Volume [Various Shapes]\n" "18. Surface Area [Various Shapes]\n" "19. Curved Surface Area [Various Shapes]\n"
-      "20. Diagonal Calculation [Various Shapes]\n" "21. Factorial Calculator\n" "22. Exit PyCalc")
+      "20. Diagonal Calculation [Various Shapes]\n" "21. Factorial Calculator\n" "22. Exit PyCalc\n")
 while True:
     ch = input("Enter choice [ 1 - 22 ] : ") # Input Choice
     print()
