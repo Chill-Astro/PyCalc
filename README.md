@@ -5,8 +5,6 @@
 
 PyCalc is a Simple, Lightweight Calculator but an Extremely Powerful CUI Calculator, Made in Python!
 
----
-
 ## Key Features :
 
 - Dozens of Calculation Options ✅
