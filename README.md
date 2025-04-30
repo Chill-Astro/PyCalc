@@ -17,7 +17,7 @@ PyCalc is a Simple, Lightweight Calculator but an Extremely Powerful CUI Calcula
 
 ---
 
-## Installing PyCalc from Winget [ Coming Soon! ] :
+## Installing PyCalc from Winget :
 
     winget install Chill-Astro.PyCalc
 
