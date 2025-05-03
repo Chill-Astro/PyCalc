@@ -34,6 +34,6 @@ PyCalc is a Simple, Lightweight Calculator but an Extremely Powerful CUI Calcula
 
 ## Preview :
 
-![image](https://github.com/user-attachments/assets/64817535-fbf5-414d-b5f4-ebb8b8d3fadc)
+![image](https://github.com/user-attachments/assets/a3603a0d-859d-4c72-9b42-c24748f5b05f)
 
 ---
