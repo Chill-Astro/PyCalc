@@ -15,7 +15,7 @@ def check_for_updates() : # Entire Update Check Thingy
                   "Please visit github.com/Chill-Astro/PyCalc to download the latest release!\n" # Provide URL for Updates
                   "-----------------------")
         elif latest_version == CURRENT_VERSION:
-            print("🎉 PyCalc is up to date!")
+            print("🎉 PyCalc is up to date!\n")
         else:
             print("⚠️  This is a DEV. Build of PyCalc!\n") # For development scenarios
     except requests.exceptions.RequestException as e:
