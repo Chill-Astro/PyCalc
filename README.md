@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://github.com/Chill-Astro/PyCalc/blob/main/PyCalc.ico" width="128px" height="128px" alt="PyCalc Logo">
 </p>
-<h1 align="center">PyCalc v1.6</h1>
+<h1 align="center">PyCalc v1.7</h1>
 
 PyCalc is a Simple, Lightweight Calculator but an Extremely Powerful CUI Calculator, Made in Python!
 
@@ -13,7 +13,7 @@ PyCalc is a Simple, Lightweight Calculator but an Extremely Powerful CUI Calcula
 - Highly Powerful and extendible. ✅
 - Fast and Error-Proof Calculations. ✅
 - High Precision for decimals. ✅
-- Available on Windows and Linux [ You can builld in MacOS too! ] ✅
+- Available on Windows, Linux & MacOS! ✅
 
 ---
 
@@ -28,7 +28,7 @@ PyCalc is a Simple, Lightweight Calculator but an Extremely Powerful CUI Calcula
 
 - Any system with Python installed.
 - Requires Requests package to be installed via pip for PyCalc v1.2 and Higher!
-- No Python installation needed if using Installer or `PyCalc-SE.exe` on Windows Systems or `PyCalc-SE` file on Linux Systems!
+- No Python installation needed if using Installer or `PyCalc.exe` on Windows or `PyCalc-Linux` file on Linux or `PyCalc-MacOS` on MacOS!
 
 ---
 
