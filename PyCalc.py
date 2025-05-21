@@ -2,7 +2,7 @@
 import math as mt
 import requests
 UPDATE_VERSION_URL = "https://gist.githubusercontent.com/Chill-Astro/e8c32d9a2b30780e3b6fd2819a51b330/raw/PyC_V.txt"
-CURRENT_VERSION = "1.6" # Linux Release + Installer & Winget Support
+CURRENT_VERSION = "1.7" # MacOS Release
 def check_for_updates() : # Entire Update Check Thingy
     try:
         response = requests.get(UPDATE_VERSION_URL, timeout=5) # Fetch version file, timeout after 5 seconds
