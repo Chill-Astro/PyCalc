@@ -22,7 +22,12 @@ PyCalc is a Simple, Lightweight Calculator but an Extremely Powerful CUI Calcula
     winget install PyCalc
 
 ---
-    
+
+## Preview :
+
+![image](https://github.com/user-attachments/assets/a3603a0d-859d-4c72-9b42-c24748f5b05f)
+
+---    
 
 ## Installation and Requirements :
 
@@ -32,8 +37,8 @@ PyCalc is a Simple, Lightweight Calculator but an Extremely Powerful CUI Calcula
 
 ---
 
-## Preview :
+## Note from Developer :
 
-![image](https://github.com/user-attachments/assets/a3603a0d-859d-4c72-9b42-c24748f5b05f)
+Appreciate my effort? Why not leave a Star ⭐ ! Also if forked, please credit me for my effort and thanks if you do! :)
 
 ---
