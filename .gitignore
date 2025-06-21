@@ -2,3 +2,4 @@ build/
 dist/
 Output/
 PyCalc.spec
+PyC_Conf.txt

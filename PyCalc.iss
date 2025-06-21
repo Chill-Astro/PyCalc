@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "PyCalc"
-#define MyAppVersion "1.7"
+#define MyAppVersion "1.8"
 #define MyAppPublisher "Chill-Astro"
 #define MyAppURL "https://github.com/Chill-Astro/PyCalc"
 #define MyAppExeName "PyCalc.exe"
