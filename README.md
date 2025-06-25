@@ -25,7 +25,7 @@ PyCalc is a Simple, Lightweight Calculator but an Extremely Powerful CUI Calcula
 
 ## Preview :
 
-![image](https://github.com/user-attachments/assets/a3603a0d-859d-4c72-9b42-c24748f5b05f)
+![Screenshot_20250626_000846](https://github.com/user-attachments/assets/103779b3-9b84-4f41-bfcd-2ce8da704501)
 
 ---    
 
