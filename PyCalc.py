@@ -12,8 +12,8 @@ if not os.path.exists("PyC_Conf.txt"):
 # Read first line to check for first run
 with open("PyC_Conf.txt", "r") as f:
     lines = f.readlines()
-    first_line = lines[1].strip() if len(lines) > 1 else "true"
-    update_check = lines[2].strip() if len(lines) > 2 else "true"
+first_line = lines[1].strip() if len(lines) > 1 else "true"
+update_check = lines[2].strip() if len(lines) > 2 else "true"
 
 if first_line == "true":
     uch = input("Do you want to enable update check? [y/n] : ").strip().lower()
@@ -24,21 +24,25 @@ if first_line == "true":
         f.writelines(lines)
     print()
     update_check = new_line.strip()
-def update(appVer, appName, gistURL) :
-        try :
-            response = requests.get(gistURL, timeout=5) # Fetch version file, timeout after 5 seconds
-            response.raise_for_status()  # Raise an error for bad responses
-            newVer = response.text.strip()  # Get the version from the response
-            if newVer > appVer :
-                print(f"🎉 A NEW version of {appName} is Available! : {newVer}\n")
-            elif newVer == appVer :
-                print(f"🎉 {appName} is up to date!\n") # Latest Version
-            elif newVer < appVer :
-                print(f"⚠️  This is a DEV. Build of {appName}!\n") # For development builds, we assume the version is lower
-        except requests.RequestException as e:
-             print("⚠️  Could not check for updates. Please check your internet connection.\n" f"Error: {e}\n")
-        except Exception as e: # Catching other potential errors, like if the content of the file is not proper.
-            print("⚠️  Error occurred while checking for updates.\n" f"Error: {e}\n")
+
+def update(appVer, appName, gistURL, check):
+    try:
+        response = requests.get(gistURL, timeout=5) # Fetch version file, timeout after 5 seconds
+        response.raise_for_status()  # Raise an error for bad responses
+        newVer = response.text.strip()  # Get the version from the response
+        if check == "true":
+            if newVer > appVer:
+                print(f"Update Available : v{newVer}\n")
+            elif newVer == appVer:
+                print("Up to date\n") # Latest Version
+            elif newVer < appVer:
+                print(f"DEV. Build\n") # For development builds
+        else:
+            print(f"Update check Disabled.\n")
+    except requests.RequestException as e:
+        print("⚠️  Could not check for updates. Please check your internet connection.\n" f"Error: {e}\n")
+    except Exception as e: # Catching other potential errors, like if the content of the file is not proper.
+        print("⚠️  Error occurred while checking for updates.\n" f"Error: {e}\n")
 def perform_binary_operation(operator, operation_func):
     try:
         x = float(input("Enter first number : "))
@@ -48,9 +52,9 @@ def perform_binary_operation(operator, operation_func):
         print(f"{x} {operator} {y} = {operation_func(x, y)}\n")
     except ValueError:
         print("Invalid input. Please enter numbers only.\n")
-# Only perform update check if update_check is 'true'
+
 if update_check == "true":
-    update(appVer, appName, rawGistURL)
+    update(appVer, appName, rawGistURL, update_check)
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -505,13 +509,15 @@ def update_check_menu():
 def main_menu():
     while True:
         clear_screen()
-        print(f"{appName} : A Simple and Lightweight Calculator. Made in Python!\nVersion : {appVer}\n")
+        print(f"{appName} v{appVer} - Status : ", end="")
         # Read update_check from config each time in case it was changed
         with open("PyC_Conf.txt", "r") as f:
             lines = f.readlines()
             update_check = lines[2].strip() if len(lines) > 2 else "true"
+        check = ""
         if update_check == "true":
-            update(appVer, appName, rawGistURL)
+            check = "true"
+        update(appVer, appName, rawGistURL, check)
         print("Select a Mode :\n\n1. Basic Maths\n2. Mensuration\n3. Finance\n4. Extras\n5. Enable / Disable Update Check\n6. Exit PyCalc\n")
         ch = input("Enter choice [ 1 - 6 ] : ")
         print()
