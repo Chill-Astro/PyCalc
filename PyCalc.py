@@ -3,17 +3,24 @@ import os
 import requests
 import math as mt
 appName = "PyCalc"
-appVer = "1.8" # Resaissance
+appVer = "1.9" # Hotfix #1 - Fix for update check
 rawGistURL = "https://gist.githubusercontent.com/Chill-Astro/e8c32d9a2b30780e3b6fd2819a51b330/raw/PyC_V.txt"
 # Ensure config file exists
 if not os.path.exists("PyC_Conf.txt"):
     with open("PyC_Conf.txt", "w") as f:
         f.write("// PyCalc Configuration for Update Check.\ntrue\ntrue\n")  # Default values
 # Read first line to check for first run
-with open("PyC_Conf.txt", "r") as f:
-    lines = f.readlines()
-first_line = lines[1].strip() if len(lines) > 1 else "true"
-update_check = lines[2].strip() if len(lines) > 2 else "true"
+try:
+    with open("PyC_Conf.txt", "r") as f:
+        lines = f.readlines()
+    first_line = lines[1].strip() if len(lines) > 1 else "true"
+    update_check = lines[2].strip() if len(lines) > 2 else "true"
+except Exception as e:
+    if os.name == 'nt':
+        print("[Windows] Please launch PyCalc as administrator or take ownership of the install directory.")
+    print(f"Error reading configuration file: {e}")
+    input("Press Enter to exit...")
+    exit(1)
 
 if first_line == "true":
     uch = input("Do you want to enable update check? [y/n] : ").strip().lower()
@@ -511,9 +518,13 @@ def main_menu():
         clear_screen()
         print(f"{appName} v{appVer} - Status : ", end="")
         # Read update_check from config each time in case it was changed
-        with open("PyC_Conf.txt", "r") as f:
-            lines = f.readlines()
+        try:
+            with open("PyC_Conf.txt", "r") as f:
+                lines = f.readlines()
             update_check = lines[2].strip() if len(lines) > 2 else "true"
+        except Exception as e:
+            print(f"Error reading configuration file: {e}")
+            exit(1)
         check = ""
         if update_check == "true":
             check = "true"
