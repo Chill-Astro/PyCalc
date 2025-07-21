@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://github.com/Chill-Astro/PyCalc/blob/main/PyCalc.ico" width="128px" height="128px" alt="PyCalc Logo">
 </p>
-<h1 align="center">PyCalc v1.8</h1>
+<h1 align="center">PyCalc v1.9</h1>
 
 PyCalc is a Simple, Lightweight Calculator but an Extremely Powerful CUI Calculator, Made in Python!
 
