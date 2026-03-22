@@ -24,39 +24,12 @@ def detect_os_theme():
             with winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize") as key:
                 value, _ = winreg.QueryValueEx(key, "AppsUseLightTheme")
                 return 'dark' if value == 0 else 'light'
-        elif sys.platform == 'darwin':
-            result = subprocess.run([
-                'defaults', 'read', '-g', 'AppleInterfaceStyle'
-            ], capture_output=True, text=True)
-            return 'dark' if 'Dark' in result.stdout else 'light'
         elif sys.platform.startswith('linux'):
             # Wayland only: check XDG_SESSION_TYPE
             if os.environ.get('XDG_SESSION_TYPE', '').lower() == 'wayland':
                 desktop = os.environ.get('XDG_CURRENT_DESKTOP', '').lower()
-                # GNOME Wayland
-                if 'gnome' in desktop:
-                    try:
-                        # GNOME 42+ uses color-scheme, fallback to gtk-theme
-                        result = subprocess.run([
-                            'gsettings', 'get', 'org.gnome.desktop.interface', 'color-scheme'
-                        ], capture_output=True, text=True)
-                        if 'dark' in result.stdout.lower():
-                            return 'dark'
-                        elif 'light' in result.stdout.lower():
-                            return 'light'
-                    except Exception:
-                        pass
-                    # Fallback: check gtk-theme
-                    try:
-                        result = subprocess.run([
-                            'gsettings', 'get', 'org.gnome.desktop.interface', 'gtk-theme'
-                        ], capture_output=True, text=True)
-                        if 'dark' in result.stdout.lower():
-                            return 'dark'
-                    except Exception:
-                        pass
                 # KDE (KWin) Wayland
-                elif 'kde' in desktop or 'plasma' in desktop:
+                if 'kde' in desktop or 'plasma' in desktop:
                     # KDE Plasma 5.24+ uses color-scheme
                     try:
                         result = subprocess.run([
