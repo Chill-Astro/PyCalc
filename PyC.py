@@ -10,14 +10,13 @@ from PySide6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QHBoxLayout, 
 from PySide6.QtGui import QIcon, QFont, QFontDatabase
 from PySide6.QtCore import Qt, QSettings, QTimer, QThread, Signal
 
-def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
+def resource_path(relative_path):    
     if hasattr(sys, '_MEIPASS'):
         return os.path.join(sys._MEIPASS, relative_path)
     return os.path.join(os.path.abspath(os.path.dirname(__file__)), relative_path)
 
 def detect_os_theme():
-    # Returns 'dark' or 'light'. Enhanced for KDE (KWin) and GNOME on Wayland.
+    # Returns 'dark' or 'light'.
     try:
         if sys.platform == 'win32':
             import winreg
@@ -204,35 +203,7 @@ class CalculatorWidget(QWidget):
         logging.debug("Initializing Calculator page")
         self.setFocusPolicy(Qt.StrongFocus)
         self.initUI()
-        self.reset()
-                        
-    def keyPressEvent(self, event):
-        key = event.key()
-        text = event. text ()
-        if text in '0123456789' :
-            self.on_button(text)
-        elif text == '+':
-            self.on_button('+')
-        elif text == '-':
-            self.on_button('-')
-        elif text == '*':
-            self.on_button('x')
-        elif text == '/':
-            self.on_button('+')
-        elif text == '.':
-            self.on_button('.')
-        elif text == '%':
-            self.on_button('%')
-        elif text.lower() == 'c':
-            self.on_button('C')
-        elif text == '=' or key == Qt.Key_Enter or key == Qt.Key_Return:
-            self.on_button('=')
-        elif key == Qt.Key_Backspace:
-            self.on_button('')
-        elif key == Qt.Key_Delete:
-            self.on_button('CE')
-        else:
-            super().keyPressEvent(event)
+        self.reset()                    
 
     def initUI(self):
         vbox = QVBoxLayout(self)
@@ -260,7 +231,6 @@ class CalculatorWidget(QWidget):
             [('1', ''), ('2', ''), ('3', ''), ('+', 'op')],
             [('+/-', 'fn'), ('0', ''), ('.', ''), ('=', 'eq')],
         ]
-        self.button_map = {}
         for i, row in enumerate(buttons):
             for j, (text, role) in enumerate(row):
                 btn = QPushButton(text)
@@ -272,13 +242,10 @@ class CalculatorWidget(QWidget):
                 elif role == 'fn':
                     btn.setProperty('fn', True)
                 btn.clicked.connect(lambda _, t=text: self.on_button(t))
-                grid.addWidget(btn, i, j)
-                self.button_map[text] = btn                
+                grid.addWidget(btn, i, j)                
 
     def reset(self):
-        self.expression_history = ""
-        self.current_input = "0"
-        self.full_expression = ""
+        self.expression_history = ""        
         self.result_pending = False
         self._currentNumber = 0.0
         self._previousNumber = 0.0
@@ -299,7 +266,6 @@ class CalculatorWidget(QWidget):
         self.history.setText(self.expression_history)
 
     def clear_entry(self):
-        self.current_input = "0"
         self._currentNumber = 0.0
         self._isNewNumberInput = True
         self._hasDecimal = False
@@ -333,8 +299,7 @@ class CalculatorWidget(QWidget):
     def input_digit(self, digit):
         if self.result_pending:
             self._currentNumber = int(digit)
-            self.expression_history = ""
-            self.full_expression = ""
+            self.expression_history = ""            
             self.result_pending = False
             self._isNewNumberInput = False
             self._hasDecimal = False
@@ -358,8 +323,7 @@ class CalculatorWidget(QWidget):
     def input_decimal(self):
         if self.result_pending:
             self._currentNumber = 0.0
-            self.expression_history = ""
-            self.full_expression = ""
+            self.expression_history = ""            
             self.result_pending = False
             self._isNewNumberInput = False
             self._hasDecimal = True
@@ -379,7 +343,7 @@ class CalculatorWidget(QWidget):
                 self.calculate_intermediate_result()
             else:
                 self._previousNumber = self._currentNumber
-        visual_op = op.replace('**', '^').replace('*', '×').replace('/', '÷')
+        visual_op = op.replace('*', '×').replace('/', '÷')
         self.expression_history = f"{self._previousNumber} {visual_op} "
         self._currentOperator = op
         self._isNewNumberInput = True
@@ -441,8 +405,6 @@ class CalculatorWidget(QWidget):
                     self.update_display()
                     return
                 result = self._previousNumber / self._currentNumber
-            elif self._currentOperator == '**':
-                result = self._previousNumber ** second_number
             if isinstance(result, float) and result.is_integer() and not self._hasDecimal:
                 self._currentNumber = int(result)
             else:
@@ -468,7 +430,7 @@ class CalculatorWidget(QWidget):
         self.update_display()
 
     def get_visual_operator(self, op):
-        return op.replace('**', '^').replace('*', '×').replace('/', '÷')
+        return op.replace('*', '×').replace('/', '÷')
 
     def toggle_sign(self):
         try:
@@ -580,7 +542,7 @@ class CalculatorWidget(QWidget):
             self.input_decimal()
         elif text in '+-×÷':
             if text == '-' and self._isNewNumberInput:
-                if self._currentNumber == 0 and (not self._currentOperator or self.expression_history.endswith(('+', '-', '×', '÷', '^', '**'))):
+                if self._currentNumber == 0 and (not self._currentOperator or self.expression_history.endswith(('+', '-', '×', '÷'))):
                     self._currentNumber = 0.0
                     self._isNewNumberInput = False
                     self._hasDecimal = False
@@ -892,16 +854,6 @@ class Calculator(QWidget):
         self._theme_timer.timeout.connect(self._check_theme_change)
         self._theme_timer.start(1000)
 
-        def debug_logo() :
-            print(r"""
- ___       ___      _      
-| _ \_  _ / __|__ _| |__   
-|  _/| | | (__/ _` | / _|  
-|_|  \_, |\___\__,_|_\__|  
-     |__/
-
-(C) Chill-Astro | 2026\n""")
-
     def closeEvent(self, event):
         self.settings.setValue("geometry", self.saveGeometry())
         super().closeEvent(event)
@@ -1021,10 +973,8 @@ class Calculator(QWidget):
         icomoon_families = QFontDatabase.applicationFontFamilies(icomoon_font_id)
         use_icomoon = bool(icomoon_families)
         if use_icomoon:
-            icomoon_font = QFont(icomoon_families[0], 14)
             icon_codes = ['\ue900', '\ue901', '\ue902', '\ue903', '\ue919', '\ue915', '🛈']
         else:
-            icomoon_font = None
             icon_codes = ['C', '△', 'SI', 'CI', 'QE', '🛈']
         self.calculators = [
             ("Calculator", icon_codes[0], CalculatorWidget),
@@ -1042,8 +992,6 @@ class Calculator(QWidget):
             btn.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
             btn.setProperty('fn', True)
             btn.setStyleSheet("font-size: 11px; font-weight: normal;")
-            if use_icomoon and idx in (8, 9):
-                 btn.setFont(icomoon_font)
             btn.clicked.connect(lambda _, i=idx: self.switch_calculator(i))
             sidebar_layout.addWidget(btn, alignment=Qt.AlignHCenter)
             self.sidebar_buttons.append(btn)
@@ -1102,16 +1050,10 @@ def debug_logo():
 """)            
 
 if __name__ == "__main__":
-    import os
-
     logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-
     debug_logo()
-
     print("Hello User! Have fun trying my Project! :)\n")
-
     app = QApplication(sys.argv)
-    
     # Load and apply the Inter font
     font_id = QFontDatabase.addApplicationFont(resource_path("Inter.ttf"))
     if font_id != -1:
@@ -1119,7 +1061,6 @@ if __name__ == "__main__":
         if font_families:
             inter_font = QFont(font_families[0])
             app.setFont(inter_font)            
-
     calc = Calculator()
     calc.show()
     sys.exit(app.exec())
