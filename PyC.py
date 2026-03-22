@@ -229,8 +229,37 @@ class CalculatorWidget(QWidget):
     def __init__(self):
         super().__init__()
         logging.debug("Initializing Calculator page")
+        self.setFocusPolicy(Qt.StrongFocus)
         self.initUI()
         self.reset()
+                        
+    def keyPressEvent(self, event):
+        key = event.key()
+        text = event. text ()
+        if text in '0123456789' :
+            self.on_button(text)
+        elif text == '+':
+            self.on_button('+')
+        elif text == '-':
+            self.on_button('-')
+        elif text == '*':
+            self.on_button('x')
+        elif text == '/':
+            self.on_button('+')
+        elif text == '.':
+            self.on_button('.')
+        elif text == '%':
+            self.on_button('%')
+        elif text.lower() == 'c':
+            self.on_button('C')
+        elif text == '=' or key == Qt.Key_Enter or key == Qt.Key_Return:
+            self.on_button('=')
+        elif key == Qt.Key_Backspace:
+            self.on_button('')
+        elif key == Qt.Key_Delete:
+            self.on_button('CE')
+        else:
+            super().keyPressEvent(event)
 
     def initUI(self):
         vbox = QVBoxLayout(self)
@@ -251,7 +280,7 @@ class CalculatorWidget(QWidget):
         grid.setSpacing(6)
         vbox.addLayout(grid)
         buttons = [
-            [('xʸ', 'fn'), ('CE', 'fn'), ('C', 'fn'), ('⌫', 'fn')],
+            [('%', 'fn'), ('CE', 'fn'), ('C', 'fn'), ('⌫', 'fn')],
             [('x²', 'fn'), ('∛x', 'fn'), ('√x', 'fn'), ('÷', 'op')],
             [('7', ''), ('8', ''), ('9', ''), ('×', 'op')],
             [('4', ''), ('5', ''), ('6', ''), ('-', 'op')],
@@ -271,7 +300,7 @@ class CalculatorWidget(QWidget):
                     btn.setProperty('fn', True)
                 btn.clicked.connect(lambda _, t=text: self.on_button(t))
                 grid.addWidget(btn, i, j)
-                self.button_map[text] = btn
+                self.button_map[text] = btn                
 
     def reset(self):
         self.expression_history = ""
@@ -521,6 +550,55 @@ class CalculatorWidget(QWidget):
         except (ValueError, TypeError):
             self.handle_calculation_error()
 
+    def calculate_percentage(self):
+        if not self._currentOperator or self._previousNumber == 0:
+            # Standalone percentage, e.g., "5%" -> 0.05
+            try:
+                self._currentNumber = float(self._currentNumber) / 100
+                self.update_display()
+            except (ValueError, TypeError):
+                self.handle_calculation_error()
+            return
+
+        try:
+            second_number = float(self._currentNumber)
+            result = 0
+
+            if self._currentOperator in ['+', '-']:
+                # For +/-, percentage is of the first number: e.g. 100 + 10% = 100 + (100 * 0.1) = 110
+                percentage_as_value = (self._previousNumber * second_number) / 100
+                if self._currentOperator == '+':
+                    result = self._previousNumber + percentage_as_value
+                else: # '-'
+                    result = self._previousNumber - percentage_as_value
+
+            elif self._currentOperator in ['*', '/']:
+                # For */, percentage just converts second number: e.g. 100 * 10% = 100 * 0.1 = 10
+                percentage_as_value = second_number / 100
+                if self._currentOperator == '*':
+                    result = self._previousNumber * percentage_as_value
+                else: # '/'
+                    if percentage_as_value == 0:
+                        self.handle_calculation_error()
+                        return
+                    result = self._previousNumber / percentage_as_value
+
+            if isinstance(result, float) and result.is_integer() and not self._hasDecimal:
+                self._currentNumber = int(result)
+            else:
+                self._currentNumber = result
+
+            self.expression_history = f"{self._previousNumber} {self.get_visual_operator(self._currentOperator)} {second_number}% ="
+            self.result_pending = True
+            self._isNewNumberInput = True
+            self._currentOperator = ""
+            self._previousNumber = self._currentNumber
+            self._hasDecimal = False
+            self.update_display()
+
+        except Exception:
+            self.handle_calculation_error()
+
     def on_button(self, text):
         logging.debug(f"Button pressed: {text}")
         if text in '0123456789':
@@ -545,8 +623,8 @@ class CalculatorWidget(QWidget):
             self.calculate_cube_root()
         elif text == '√x':
             self.calculate_square_root()
-        elif text == 'xʸ':
-            self.input_operator('**')
+        elif text == '%':
+            self.calculate_percentage()
         elif text == '=':
             self.calculate_result()
         elif text == 'C':
@@ -571,8 +649,8 @@ class CalculatorWidget(QWidget):
             self.on_button('÷')
         elif text == '.':
             self.on_button('.')
-        elif text == '^':
-            self.on_button('xʸ')
+        elif text == '%':
+            self.on_button('%')
         elif text.lower() == 'c':
             self.on_button('C')
         elif text == '=' or key == Qt.Key_Enter or key == Qt.Key_Return:
@@ -882,41 +960,77 @@ class Calculator(QWidget):
 
     def dark_stylesheet(self):
         return """
-            QWidget { background: #23272e; }
-            QLabel { color: #e6e6e6; }
-            QLabel#display { color: #e6e6e6; }
-            QLabel#history { color: #888; }
+            /* Charcoal Black Background */
+            QWidget { background: #121212; } 
+            
+            QLabel { color: #e0e0e0; }
+            QLabel#display { color: #ffffff; }
+            QLabel#history { color: #777; }
+
+            /* Buttons: Lighter Charcoal & Very Round */
             QPushButton {
-                background: #31343b; color: #e6e6e6; border: none; border-radius: 5px;
-                font-size: 15px; padding: 8px;
+                background: #1e1e1e; 
+                color: #e0e0e0;                 
+                border-radius: 14px; 
+                font-size: 15px; 
+                padding: 8px;
             }
-            QPushButton:pressed { background: #3a3d44; }
-            QPushButton[op="true"] { background: #3b4252; color: #e6e6e6; }
-            QPushButton[op="true"]:pressed { background: #434c5e; }
-            QPushButton[fn="true"] { background: #2e3440; color: #bfc7d5; }
-            QPushButton[fn="true"]:pressed { background: #3b4252; }
-            QPushButton[eq="true"] { background: #5e81ac; color: #fff; }
-            QPushButton[eq="true"]:pressed { background: #4c669f; }
+            QPushButton:pressed { background: #252525; }
+
+            /* Operators */
+            QPushButton[op="true"] { background: #222222; color: #ffffff; }
+            QPushButton[op="true"]:pressed { background: #333333; }
+
+            /* Function Buttons */
+            QPushButton[fn="true"] { background: #1a1a1a; color: #999999; }
+            QPushButton[fn="true"]:pressed { background: #252525; }
+
+            /* Equal & Calculate: Periwinkle Blue Accents */
+            QPushButton[eq="true"] { 
+                background: #B9CEEB; 
+                color: #121212; 
+                font-weight: bold;
+            }
+            QPushButton[eq="true"]:pressed { background: #a5b9d4; }
         """
 
     def light_stylesheet(self):
         return """
-            QWidget { background: #f7fafd; }
-            QLabel { color: #23272e; }
-            QLabel#display { color: #23272e; }
-            QLabel#history { color: #7b8794; }
+            /* Soft Off-White Background */
+            QWidget { background: #F5F7FA; } 
+            
+            QLabel { color: #1E293B; }
+            QLabel#display { color: #0F172A; }
+            QLabel#history { color: #64748B; }
+
+            /* Buttons: Soft Grey & Fully Round */
             QPushButton {
-                background: #f0f4fa; color: #23272e; border: none; border-radius: 5px;
-                font-size: 15px; padding: 8px;
-                transition: background 0.2s;
+                background: #E2E8F0; 
+                color: #1E293B; 
+                border: 1px solid transparent; /* Smooths edges */
+                border-radius: 14px; 
+                font-size: 15px; 
+                padding: 8px;
             }
-            QPushButton:pressed { background: #e0e7ef; }
-            QPushButton[op="true"] { background: #e3e8f0; color: #23272e; }
-            QPushButton[op="true"]:pressed { background: #bae6fd; }
-            QPushButton[fn="true"] { background: #e0e7ef; color: #4b5563; }
-            QPushButton[fn="true"]:pressed { background: #cbd5e1; }
-            QPushButton[eq="true"] { background: #e0f2fe; color: #23272e; }
-            QPushButton[eq="true"]:pressed { background: #bae6fd; }
+            QPushButton:pressed { background: #CBD5E1; }
+
+            /* Operators */
+            QPushButton[op="true"] { background: #CBD5E1; color: #0F172A; }
+            QPushButton[op="true"]:pressed { background: #94A3B8; }
+
+            /* Function Buttons */
+            QPushButton[fn="true"] { background: #F1F5F9; color: #64748B; }
+            QPushButton[fn="true"]:pressed { background: #E2E8F0; }
+
+            /* Equal & Calculate: Periwinkle Blue Accents */
+            QPushButton[eq="true"] { 
+                background: #B9CEEB; 
+                color: #121212; 
+                font-weight: bold;
+                border: 1px solid transparent;
+                border-radius: 14px;
+            }
+            QPushButton[eq="true"]:pressed { background: #A5B9D4; }
         """
 
     def initUI(self):        
@@ -925,7 +1039,7 @@ class Calculator(QWidget):
         main_layout.setContentsMargins(0, 0, 0, 0)
         sidebar = QFrame()
         sidebar.setFixedWidth(52)
-        sidebar.setFrameShape(QFrame.StyledPanel)
+        sidebar.setFrameShape(QFrame.NoFrame)
         sidebar_layout = QVBoxLayout(sidebar)
         sidebar_layout.setSpacing(4)
         sidebar_layout.setContentsMargins(2, 8, 2, 8)
@@ -951,10 +1065,10 @@ class Calculator(QWidget):
             btn = QPushButton(icon_text)
             btn.setToolTip(tooltip)
             btn.setFixedHeight(40)
-            btn.setFixedWidth(42)
+            btn.setFixedWidth(40)
             btn.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
             btn.setProperty('fn', True)
-            btn.setStyleSheet("font-size: 10px; font-weight: bold;")
+            btn.setStyleSheet("font-size: 11px; font-weight: normal;")
             if use_icomoon and idx in (8, 9):
                  btn.setFont(icomoon_font)
             btn.clicked.connect(lambda _, i=idx: self.switch_calculator(i))
@@ -982,6 +1096,10 @@ class Calculator(QWidget):
                 print(f"Error loading widget: {e}")
                 return
         self.stack.setCurrentIndex(self.loaded_widgets[idx])
+        current_widget = self.stack.widget(self.loaded_widgets[idx])
+        if current_widget:
+            current_widget.setFocus()
+
         for i, btn in enumerate(self.sidebar_buttons):
             btn.setProperty('active', i == idx)
             btn.setStyleSheet(self.button_style(i == idx))
@@ -990,15 +1108,15 @@ class Calculator(QWidget):
         theme = self._detect_os_theme()
         if theme == 'dark':
             if active:
-                return "background: #5e81ac; color: #fff; border-radius: 5px; font-size: 18px; font-weight: bold;"
+                return "background: #B9CEEB; color: #121212; border-radius: 18px; font-size: 18px; font-weight: bold;"
             else:
-                return "background: #2e3440; color: #bfc7d5; border-radius: 5px; font-size: 18px;"
-        else:
+                return "background: #1a1a1a; color: #777; border-radius: 18px; font-size: 18px;"
+        else:            
             if active:
-                return "background: #2563eb; color: #fff; border-radius: 5px; font-size: 18px; font-weight: bold;"
+                return "background: #B9CEEB; color: #121212; border-radius: 18px; font-size: 18px; font-weight: bold;"
             else:
-                return "background: #e0e7ef; color: #4b5563; border-radius: 5px; font-size: 18px;"
-
+                return "background: #F1F5F9; color: #64748B; border-radius: 18px; font-size: 18px;"
+            
 def debug_logo():    
     print(r"""
  ___       ___      _      
