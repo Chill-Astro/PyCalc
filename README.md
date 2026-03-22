@@ -9,10 +9,18 @@
   Latest Version : `v3.14.1.3` ( To be Released )
   
   Target OS : `Windows & Linux`
-
-  ( To be ) Available on : `Flathub, Snap Store and Winget`
   
 </div>
+
+---
+
+## Sunset Notice :
+
+PyCalc will recieve its FINAL Update ( v3.14.1.3 ) by April 1st and then this App will only get Periodic Updates and Urgent Fixes.
+
+New Features May or May not Come.
+
+Windows users shall move on to [Lamina ✦](https://github.com/Chill-Astro/Lamina) for Consistent Updates and Improvements and a Native Experience.
 
 ---
 
